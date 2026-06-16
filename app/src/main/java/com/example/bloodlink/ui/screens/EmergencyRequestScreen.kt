@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -172,7 +173,7 @@ fun EmergencyRequestScreen(
                         onNavigateToSuccess(requestId, patientName, bloodGroup, hospital, location, units, urgency)
                     } 
                 },
-                modifier = Modifier.fillMaxWidth().height(56.dp),
+                modifier = Modifier.fillMaxWidth().height(56.dp).testTag("confirm_broadcast_button"),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = LifeFlowRed),
                 enabled = requestState !is RequestState.Loading && bloodGroup.isNotEmpty() && hospital.isNotEmpty() && patientName.isNotEmpty()
