@@ -42,7 +42,9 @@ jobs:
           appium driver install uiautomator2
 
       - name: Build APK
-        run: ./gradlew :app:assembleDebug
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug
 
       - name: Run E2E Tests
         uses: reactivecircus/android-emulator-runner@v2
