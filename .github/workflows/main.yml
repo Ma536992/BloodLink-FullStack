@@ -37,5 +37,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Make Gradlew Executable
+        run: chmod +x gradlew
+
       - name: Build Android App (Check for Errors)
         run: ./gradlew assembleDebug
