@@ -24,3 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "blood link"
 include(":app")
+include(":testing")

@@ -40,7 +40,7 @@ public class ExcelReporter {
             row.createCell(2).setCellValue(res.comments);
         }
 
-        try (FileOutputStream fileOut = new FileOutputStream("TestReport_Analysis.xlsx")) {
+        try (FileOutputStream fileOut = new FileOutputStream("testing/TestReport_Analysis.xlsx")) {
             workbook.write(fileOut);
             workbook.close();
             System.out.println("Excel Report Generated: TestReport_Analysis.xlsx");

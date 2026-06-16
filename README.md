@@ -52,6 +52,12 @@ BloodLink is a comprehensive full-stack solution designed to bridge the gap betw
    ```
 4. **Test Case**: Open `http://localhost:5173` and attempt to submit an 'Emergency Request'.
 
+### 3. Cloud CI/CD (GitHub Actions)
+This project is configured with GitHub Actions to automatically:
+1. **Deploy the Web App** to Firebase Hosting.
+2. **Run Appium E2E Tests** in a cloud-based Android Emulator.
+3. **Generate an Excel Analysis Report** (Available in the 'Actions' tab artifacts).
+
 ---
 
 ## 👨‍💻 Author

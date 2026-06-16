@@ -22,11 +22,9 @@ public class AppiumE2ETest {
     public void setup() throws MalformedURLException {
         UiAutomator2Options options = new UiAutomator2Options()
                 .setPlatformName("Android")
-                .setDeviceName("Pixel 7a")
-                .setAppPackage("com.example.bloodlink")
-                .setAppActivity(".MainActivity")
                 .setAutomationName("UiAutomator2")
-                .setNoReset(true);
+                .setApp("app/build/outputs/apk/debug/app-debug.apk") // Point to the built APK
+                .setNoReset(false);
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), options);
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
