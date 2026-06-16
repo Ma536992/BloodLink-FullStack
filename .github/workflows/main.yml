@@ -61,13 +61,11 @@ jobs:
       - name: Run Appium Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27 # Even lighter version for maximum speed
-          target: default
+          api-level: 29
+          target: google_apis
           arch: x86_64
-          profile: Nexus 6
           force-avd-creation: true
-          emulator-boot-timeout: 1200 # Increase to 20 minutes
-          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu host -no-snapshot -noaudio -no-boot-anim
           disable-animations: true
           script: |
             appium & 
