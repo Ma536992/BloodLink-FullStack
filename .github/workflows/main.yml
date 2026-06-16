@@ -61,12 +61,15 @@ jobs:
       - name: Run Appium Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 31
-          target: google_apis
+          api-level: 29 # More stable for cloud builds
+          target: default
           arch: x86_64
+          force-avd-creation: true
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          disable-animations: true
           script: |
             appium & 
-            sleep 10
+            sleep 15
             ./gradlew :testing:test
           
       - name: Upload Test Report
