@@ -5,10 +5,6 @@ plugins {
 group = "com.example.bloodlink.testing"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     // Appium and Selenium
     testImplementation("io.appium:java-client:9.2.2")
