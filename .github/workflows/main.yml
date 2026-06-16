@@ -52,6 +52,9 @@ jobs:
           npm install -g appium
           appium driver install uiautomator2
 
+      - name: Make Gradlew Executable
+        run: chmod +x gradlew
+
       - name: Build Android App (APK)
         run: ./gradlew :app:assembleDebug
 
