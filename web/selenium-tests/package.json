@@ -1,0 +1,12 @@
+{
+  "name": "bloodlink-selenium-tests",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "mocha tests/**/*.test.js --timeout 60000"
+  },
+  "devDependencies": {
+    "mocha": "^10.4.0",
+    "selenium-webdriver": "^4.20.0",
+    "chromedriver": "^124.0.0"
+  }
+}

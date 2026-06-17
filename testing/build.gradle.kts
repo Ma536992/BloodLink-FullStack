@@ -5,6 +5,10 @@ plugins {
 group = "com.example.bloodlink.testing"
 version = "1.0-SNAPSHOT"
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     // Appium and Selenium
     testImplementation("io.appium:java-client:9.2.2")
@@ -17,6 +21,12 @@ dependencies {
     // Apache POI for Excel Reports
     implementation("org.apache.poi:poi:5.2.5")
     implementation("org.apache.poi:poi-ooxml:5.2.5")
+
+    // Commons IO for screenshots/logs
+    implementation("commons-io:commons-io:2.15.1")
+
+    // ExtentReports for HTML reporting
+    implementation("com.aventstack:extentreports:5.1.1")
 }
 
 tasks.test {
