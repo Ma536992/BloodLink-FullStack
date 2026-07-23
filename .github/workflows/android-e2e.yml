@@ -30,7 +30,7 @@ jobs:
       - name: Build APK
         run: |
           chmod +x gradlew
-          ./gradlew :app:assembleDebug
+          ./gradlew assembleDebug
 
       - name: Run E2E Tests
         uses: reactivecircus/android-emulator-runner@v2
