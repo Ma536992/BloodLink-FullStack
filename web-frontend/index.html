@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BloodLink - Mobile Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="login-content">
+            <div class="brand-header">
+                <div class="logo">💧</div>
+                <h1 class="brand-name">BloodLink</h1>
+            </div>
+
+            <div class="welcome-section">
+                <h2>Welcome Back</h2>
+                <p>Your contribution saves lives.</p>
+            </div>
+
+            <div class="toggle-container">
+                <div class="toggle-btn inactive" onclick="toggleMode('signup')">SIGN UP</div>
+                <div class="toggle-btn active" onclick="toggleMode('login')">LOGIN</div>
+            </div>
+
+            <form class="login-form" id="loginForm">
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="Email Address" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+                
+                <div id="errorMessage" style="color: red; font-size: 13px; margin-bottom: 12px; display: none; text-align: center;"></div>
+
+                <button type="submit" class="primary-btn" id="emailLoginBtn">
+                    <span id="btnText">Login Account</span>
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>OR CONTINUE WITH</span>
+            </div>
+
+            <button class="google-btn" id="googleLoginBtn">
+                <span class="google-icon">G</span>
+                <span id="googleBtnText">Sign in with Google</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (Modular v9/v10) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgm8hVDmsyalJHsR4bjLyNX4-Tb_xb9WU",
+            authDomain: "link-blood-bdaad.firebaseapp.com",
+            projectId: "link-blood-bdaad",
+            storageBucket: "link-blood-bdaad.firebasestorage.app"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        let isLoginMode = true;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = 'home.html';
+            }
+        });
+
+        window.toggleMode = function(mode) {
+            const btns = document.querySelectorAll('.toggle-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            btns.forEach(btn => btn.classList.add('inactive'));
+            
+            if (mode === 'login') {
+                btns[1].classList.remove('inactive');
+                btns[1].classList.add('active');
+                document.getElementById('btnText').textContent = 'Login Account';
+                isLoginMode = true;
+            } else {
+                btns[0].classList.remove('inactive');
+                btns[0].classList.add('active');
+                document.getElementById('btnText').textContent = 'Create Account';
+                isLoginMode = false;
+            }
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('emailLoginBtn');
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMessage');
+            
+            errorDiv.style.display = 'none';
+            btn.innerHTML = '<div class="spinner"></div>';
+
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message.replace('Firebase: ', '');
+                errorDiv.style.display = 'block';
+                btn.innerHTML = `<span id="btnText">${isLoginMode ? 'Login Account' : 'Create Account'}</span>`;
+            }
+        });
+
+        document.getElementById('googleLoginBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('googleLoginBtn');
+            btn.innerHTML = '<div class="spinner" style="border-top-color: var(--primary-red); border-color: rgba(229, 57, 53, 0.3);"></div>';
+            
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                btn.innerHTML = '<span class="google-icon">G</span><span id="googleBtnText">Sign in with Google</span>';
+                document.getElementById('errorMessage').textContent = error.message;
+                document.getElementById('errorMessage').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
