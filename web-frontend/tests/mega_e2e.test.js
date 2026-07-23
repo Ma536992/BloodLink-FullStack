@@ -1,12 +1,14 @@
 const { Builder, By, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome');
 const { expect } = require('chai');
+const ExcelJS = require('exceljs');
 
 const BASE_URL = 'http://localhost:3000';
 
 describe('Mega Web E2E Suite (400+ Unique Test Cases)', function() {
     this.timeout(60000); // 60 seconds
     let driver;
+    const testResults = [];
 
     before(async function() {
         let options = new chrome.Options();
@@ -21,10 +23,42 @@ describe('Mega Web E2E Suite (400+ Unique Test Cases)', function() {
             .build();
     });
 
+    afterEach(function() {
+        testResults.push({
+            title: this.currentTest.title,
+            state: this.currentTest.state || 'skipped',
+            duration: this.currentTest.duration || 0
+        });
+    });
+
     after(async function() {
         if (driver) {
             await driver.quit();
         }
+        
+        // Generate Excel Report
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('E2E Test Results');
+        
+        sheet.columns = [
+            { header: 'Test ID & Description', key: 'title', width: 80 },
+            { header: 'Status', key: 'state', width: 15 },
+            { header: 'Duration (ms)', key: 'duration', width: 15 }
+        ];
+        
+        sheet.getRow(1).font = { bold: true };
+        
+        testResults.forEach(res => {
+            const row = sheet.addRow(res);
+            if (res.state === 'passed') {
+                row.getCell('state').font = { color: { argb: 'FF008000' } }; // Green
+            } else {
+                row.getCell('state').font = { color: { argb: 'FFFF0000' } }; // Red
+            }
+        });
+        
+        await workbook.xlsx.writeFile('Mega_Test_Report.xlsx');
+        console.log('✅ Excel Report generated: Mega_Test_Report.xlsx');
     });
 
     const pages = [

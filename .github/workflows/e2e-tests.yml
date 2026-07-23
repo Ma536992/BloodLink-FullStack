@@ -32,6 +32,27 @@ jobs:
         curl -s http://localhost:3000 > /dev/null || exit 1
         echo "Server is running!"
 
+    - name: Run Vulnerability Scan
+      working-directory: ./web-frontend
+      run: |
+        echo "=== Security Vulnerability Scan ===" > Vulnerability_Report.txt
+        npm audit >> Vulnerability_Report.txt || true
+        CRITICAL=$(grep -o -E "[0-9]+ critical" Vulnerability_Report.txt | grep -o -E "[0-9]+" || echo 0)
+        echo "Critical Vulnerabilities found: $CRITICAL"
+        if [ "$CRITICAL" -gt 0 ]; then
+          echo "FAIL: Security Policy Violated. Zero-Critical Policy."
+          exit 1
+        fi
+
     - name: Run E2E Mega Test Suite (400+ Assertions)
       working-directory: ./web-frontend
       run: npx mocha tests/mega_e2e.test.js
+      
+    - name: Upload Test Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: Mega-E2E-Reports
+        path: |
+          web-frontend/Mega_Test_Report.xlsx
+          web-frontend/Vulnerability_Report.txt
