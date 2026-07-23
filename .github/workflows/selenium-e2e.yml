@@ -1,0 +1,28 @@
+name: Web Selenium E2E Testing
+
+on:
+  workflow_run:
+    workflows: ["BloodLink Full-Stack CI"]
+    types: [completed]
+
+jobs:
+  selenium-test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Dependencies
+        run: |
+          cd web/selenium-tests
+          npm install
+
+      - name: Run Selenium Tests
+        run: |
+          cd web/selenium-tests
+          npm test
