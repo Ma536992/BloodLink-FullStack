@@ -1,4 +1,5 @@
 const { Builder, By, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 const assert = require('assert');
 const ExcelJS = require('exceljs');
 
@@ -7,7 +8,9 @@ describe('BloodLink Web Login E2E', function() {
     const testResults = [];
 
     before(async function() {
-        driver = await new Builder().forBrowser('chrome').build();
+        let options = new chrome.Options();
+        options.addArguments('--headless', '--no-sandbox', '--disable-dev-shm-usage', '--window-size=1920,1080');
+        driver = await new Builder().forBrowser('chrome').setChromeOptions(options).build();
     });
 
     afterEach(function() {
