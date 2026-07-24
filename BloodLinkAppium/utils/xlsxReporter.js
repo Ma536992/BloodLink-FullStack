@@ -20,38 +20,64 @@ module.exports = {
         const failed = testResults.filter(t => t.state === 'failed').length;
         const total = testResults.length;
         
-        summarySheet.addRow(['Total Tests', total]);
-        summarySheet.addRow(['Passed', passed]);
-        summarySheet.addRow(['Failed', failed]);
-        summarySheet.addRow(['Pass Rate', total > 0 ? ((passed / total) * 100).toFixed(2) + '%' : '0%']);
-        
-        summarySheet.getColumn(1).width = 20;
-        summarySheet.getColumn(2).width = 20;
+        summarySheet.addRow(['Category', 'Tests', 'Passed', 'Failed', 'Pass Rate']);
+        summarySheet.getRow(1).font = { bold: true };
 
-        // Sheet 2: Test Cases
-        const sheet = workbook.addWorksheet('Test Cases');
-        sheet.columns = [
-            { header: 'Test Title', key: 'title', width: 80 },
-            { header: 'Status', key: 'state', width: 15 },
-            { header: 'Duration (ms)', key: 'duration', width: 15 },
-            { header: 'Error', key: 'error', width: 50 }
-        ];
-        
-        sheet.getRow(1).font = { bold: true };
-        
+        const catData = {};
         testResults.forEach(res => {
-            const row = sheet.addRow({
-                title: res.title,
-                state: res.state,
-                duration: res.duration,
-                error: res.error ? res.error.message : ''
-            });
-            if (res.state === 'passed') {
-                row.getCell('state').font = { color: { argb: 'FF008000' } };
-            } else {
-                row.getCell('state').font = { color: { argb: 'FFFF0000' } };
-            }
+            const catName = res.category ? res.category.replace('Category: ', '') : 'Unknown';
+            if (!catData[catName]) catData[catName] = { tests: 0, passed: 0, failed: 0, results: [] };
+            
+            catData[catName].tests++;
+            if (res.state === 'passed') catData[catName].passed++;
+            else catData[catName].failed++;
+            
+            catData[catName].results.push(res);
         });
+
+        for (const [catName, stats] of Object.entries(catData)) {
+            const passRate = stats.tests > 0 ? ((stats.passed / stats.tests) * 100).toFixed(1) + '%' : '0%';
+            summarySheet.addRow([catName, stats.tests, stats.passed, stats.failed, passRate]);
+        }
+        
+        const totalPassRate = total > 0 ? ((passed / total) * 100).toFixed(1) + '%' : '0%';
+        summarySheet.addRow(['Total', total, passed, failed, totalPassRate]);
+        summarySheet.getRow(summarySheet.rowCount).font = { bold: true };
+
+        summarySheet.getColumn(1).width = 30;
+        summarySheet.getColumn(2).width = 15;
+        summarySheet.getColumn(3).width = 15;
+        summarySheet.getColumn(4).width = 15;
+        summarySheet.getColumn(5).width = 15;
+
+        // Create a separate sheet for each category (11 sections)
+        for (const [catName, stats] of Object.entries(catData)) {
+            const safeSheetName = catName.substring(0, 31).replace(/[\\\/\?\*\[\]\:]/g, '');
+            const sheet = workbook.addWorksheet(safeSheetName);
+            
+            sheet.columns = [
+                { header: 'Test Title', key: 'title', width: 80 },
+                { header: 'Status', key: 'state', width: 15 },
+                { header: 'Duration (ms)', key: 'duration', width: 15 },
+                { header: 'Error', key: 'error', width: 50 }
+            ];
+            
+            sheet.getRow(1).font = { bold: true };
+            
+            stats.results.forEach(res => {
+                const row = sheet.addRow({
+                    title: res.title,
+                    state: res.state,
+                    duration: res.duration,
+                    error: res.error ? res.error.message : ''
+                });
+                if (res.state === 'passed') {
+                    row.getCell('state').font = { color: { argb: 'FF008000' } };
+                } else {
+                    row.getCell('state').font = { color: { argb: 'FFFF0000' } };
+                }
+            });
+        }
 
         await workbook.xlsx.writeFile(outputPath);
     },
