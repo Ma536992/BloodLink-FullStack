@@ -5,8 +5,9 @@
     "test": "mocha tests/**/*.test.js --timeout 60000"
   },
   "devDependencies": {
+    "chromedriver": "^124.0.0",
+    "exceljs": "^4.4.0",
     "mocha": "^10.4.0",
-    "selenium-webdriver": "^4.20.0",
-    "chromedriver": "^124.0.0"
+    "selenium-webdriver": "^4.20.0"
   }
 }

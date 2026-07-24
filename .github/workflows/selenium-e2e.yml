@@ -22,7 +22,28 @@ jobs:
           cd web/selenium-tests
           npm install
 
+      - name: Run Vulnerability Scan
+        run: |
+          cd web/selenium-tests
+          echo "=== Security Vulnerability Scan ===" > Vulnerability_Report.txt
+          npm audit >> Vulnerability_Report.txt || true
+          CRITICAL=$(grep -o -E "[0-9]+ critical" Vulnerability_Report.txt | grep -o -E "[0-9]+" || echo 0)
+          echo "Critical Vulnerabilities found: $CRITICAL"
+          if [ "$CRITICAL" -gt 0 ]; then
+            echo "FAIL: Security Policy Violated. Zero-Critical Policy."
+            exit 1
+          fi
+
       - name: Run Selenium Tests
         run: |
           cd web/selenium-tests
           npm test
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Selenium-E2E-Reports
+          path: |
+            web/selenium-tests/Selenium_Test_Report.xlsx
+            web/selenium-tests/Vulnerability_Report.txt
