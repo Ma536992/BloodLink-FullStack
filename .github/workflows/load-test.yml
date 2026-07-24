@@ -1,0 +1,33 @@
+name: Load Test (k6)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  k6-load-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Run k6 Load Test
+        run: |
+          k6 run --summary-export=summary.json BloodLinkBackend/scripts/load-test.js
+        env:
+          BACKEND_URL: "https://Ma536992.github.io/BloodLink-FullStack/"
+
+      - name: Publish Performance Metrics to Summary
+        if: always()
+        run: |
+          node BloodLinkBackend/scripts/parseK6Summary.js
