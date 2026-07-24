@@ -82,7 +82,7 @@ module.exports = {
         });
 
         let markdown = `
-# 📱 BloodLink Appium Mobile E2E Test Results
+# 📱 VeriTask Appium Mobile E2E Test Results
 
 **All ${totalTests} Appium Test Cases passed successfully across ${Object.keys(categories).length} categories!**
 

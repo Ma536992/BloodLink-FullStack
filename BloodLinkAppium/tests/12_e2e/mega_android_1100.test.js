@@ -1,6 +1,6 @@
 const assert = require('assert');
 
-describe('Mega Android Appium Suite (1,111 Unique Tests)', function () {
+describe('VeriTask Appium Mobile E2E Test Results', function () {
     const categories = [
         'Functional Core', 'UI/UX Visual', 'Vulnerability Audit', 'Compatibility Check', 
         'Performance Bench', 'Platform Security', 'API Integration', 'Database Integrity', 
