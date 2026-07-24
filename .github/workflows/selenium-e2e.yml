@@ -1,14 +1,14 @@
 name: Web Selenium E2E Testing
 
 on:
-  workflow_run:
-    workflows: ["BloodLink Full-Stack CI"]
-    types: [completed]
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
 
 jobs:
   selenium-test:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
 
