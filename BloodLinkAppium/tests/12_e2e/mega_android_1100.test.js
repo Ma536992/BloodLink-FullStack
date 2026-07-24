@@ -2,8 +2,9 @@ const assert = require('assert');
 
 describe('Mega Android Appium Suite (1,111 Unique Tests)', function () {
     const categories = [
-        'Functional', 'UI/UX', 'Compatibility', 'Performance', 'Security',
-        'API', 'Database', 'Accessibility', 'Mobile-Specific', 'Regression', 'E2E'
+        'Functional Core', 'UI/UX Visual', 'Vulnerability Audit', 'Compatibility Check', 
+        'Performance Bench', 'Platform Security', 'API Integration', 'Database Integrity', 
+        'Accessibility Compliance', 'Mobile-Specific Features', 'Regression Guard'
     ];
 
     let testCounter = 1;

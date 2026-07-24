@@ -37,6 +37,7 @@ exports.config = {
     afterTest: function(test, context, { error, result, duration, passed, retries }) {
         xlsxReporter.recordTest({
             title: test.title,
+            category: test.parent || 'Unknown Category',
             state: passed ? 'passed' : 'failed',
             duration: duration || Math.floor(Math.random() * 16) + 5, // Fallback if 0ms
             error: error
@@ -45,6 +46,7 @@ exports.config = {
 
     onComplete: function(exitCode, config, capabilities, results) {
         xlsxReporter.generateReport('Selenium_Appium_Report.xlsx');
+        xlsxReporter.generateMarkdownSummary();
         console.log('✅ WDIO Run Complete. Report generated.');
     }
 };

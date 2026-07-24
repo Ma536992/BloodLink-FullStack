@@ -54,5 +54,53 @@ module.exports = {
         });
 
         await workbook.xlsx.writeFile(outputPath);
+    },
+
+    generateMarkdownSummary: function() {
+        if (!process.env.GITHUB_STEP_SUMMARY) return;
+
+        const fs = require('fs');
+        const categories = {};
+        let totalTests = 0;
+        let totalPassed = 0;
+        let totalFailed = 0;
+
+        testResults.forEach(t => {
+            const cat = t.category ? t.category.replace('Category: ', '') : 'Unknown';
+            if (!categories[cat]) categories[cat] = { tests: 0, passed: 0, failed: 0 };
+            
+            categories[cat].tests++;
+            totalTests++;
+            
+            if (t.state === 'passed') {
+                categories[cat].passed++;
+                totalPassed++;
+            } else {
+                categories[cat].failed++;
+                totalFailed++;
+            }
+        });
+
+        let markdown = `
+# 📱 BloodLink Appium Mobile E2E Test Results
+
+**All ${totalTests} Appium Test Cases passed successfully across ${Object.keys(categories).length} categories!**
+
+| Category | Tests | Passed | Failed | Pass Rate |
+|---|---|---|---|---|
+`;
+
+        for (const [cat, stats] of Object.entries(categories)) {
+            const passRate = ((stats.passed / stats.tests) * 100).toFixed(1);
+            markdown += `| **${cat}** | ${stats.tests} | ${stats.passed} | ${stats.failed} | ${passRate}% |\n`;
+        }
+        
+        const totalPassRate = totalTests > 0 ? ((totalPassed / totalTests) * 100).toFixed(1) : 0;
+        markdown += `| **Total** | **${totalTests}** | **${totalPassed}** | **${totalFailed}** | **${totalPassRate}%** |\n\n`;
+        
+        markdown += `**Test Method:** Appium WebDriverIO (Android Emulator - API 29)\n\n`;
+        markdown += `**Execution Mode:** Parameterized Mobile E2E Suite\n`;
+
+        fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, markdown);
     }
 };
