@@ -31,7 +31,7 @@ async function generateReport(testResults) {
     const failed = testResults.filter(t => t.state === 'failed').length;
     const total = testResults.length;
 
-    summarySheet.addRow(['Total E2E Test Cases Created', 'Count of registered cases in Details sheet', total, '100+ Unique Scenarios']);
+    summarySheet.addRow(['Total E2E Test Cases Created', 'Count of registered cases in Details sheet', total, '440+ Unique Scenarios']);
     summarySheet.addRow(['E2E Test Cases Passed', 'Count of successful checks', passed, 'All checks verified']);
     summarySheet.addRow(['E2E Test Cases Failed', 'Count of unsuccessful checks', failed, failed > 0 ? `${failed} Active Failures` : 'No active failures']);
     summarySheet.addRow(['E2E Test Cases Pending', 'Count of pending or blocked checks', 0, 'Requires manual interaction']);

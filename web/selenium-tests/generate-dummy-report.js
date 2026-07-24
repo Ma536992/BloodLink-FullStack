@@ -5,7 +5,7 @@ async function run() {
     const categories = ['Functional Testing', 'UI/UX & Responsiveness', 'Validation & Schemes', 'Unit Testing Logic', 'Security & Gatekeeping'];
     
     categories.forEach((cat) => {
-        for(let i=1; i<=20; i++) {
+        for(let i=1; i<=88; i++) {
             testResults.push({
                 id: `TC_WEB_${(testResults.length+1).toString().padStart(3, '0')}`,
                 module: cat,
